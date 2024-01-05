@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Task = ({ task, onCheckboxClick }) => {
+export const Task = ({ task, onCheckboxClick, onDeleteClick }) => {
   return <li>
       <input 
         type="checkbox"
@@ -11,5 +11,6 @@ export const Task = ({ task, onCheckboxClick }) => {
       <span>
         {task.text}
       </span>
+      <button onClick={() => onDeleteClick(task)}>&times;</button>
     </li>;
 };
