@@ -21,12 +21,26 @@ export const App = () => {
 
   const filter = hideCompleted ? {...hideCompletedFilter, ...userFilter} : userFilter
 
-  const tasks = useTracker(() => TasksCollection.find(filter, {sort: {createdAt: -1}}).fetch())
+  const { tasks, pendingTasksCount, isLoading } = useTracker(() => {
+    const noDataAvailable = { tasks: [], pendingTasksCount: 0 };
+    if (!Meteor.user()) {
+      return noDataAvailable;
+    }
+    const handler = Meteor.subscribe('tasks');
 
-  const pendingTasksCount = useTracker(() => {
-    if (!user) return 0
+    if (!handler.ready()) {
+      return { ...noDataAvailable, isLoading: true };
+    }
 
-    return TasksCollection.find(hideCompletedFilter).count()
+    const tasks = TasksCollection.find(
+      filter,
+      {
+        sort: { createdAt: -1 },
+      }
+    ).fetch();
+    const pendingTasksCount = TasksCollection.find(hideCompletedFilter).count();
+
+    return { tasks, pendingTasksCount };
   });
 
   const pendingTasksTitle = `${
@@ -59,6 +73,8 @@ export const App = () => {
                 {hideCompleted ? 'Show All' : 'Hide Completed'}
               </button>
             </div>
+
+            {isLoading && <div className="loading">loading...</div>}
 
             <ul className="tasks">
               {tasks.map(task => (
