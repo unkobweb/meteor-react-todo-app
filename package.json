@@ -20,5 +20,8 @@
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "chai": "^5.0.0"
   }
 }
