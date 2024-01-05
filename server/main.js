@@ -34,3 +34,14 @@ Meteor.startup(async () => {
     ].forEach(taskText => insertTask(taskText, user))
   }
 });
+
+ServiceConfiguration.configurations.upsert(
+  {service: 'github'},
+  {
+    $set: {
+      loginStyle: 'popup',
+      clientId: '8515e30eaf62616d1356',
+      secret: '6b6bd5fb09799575497fa7156fbb037b21ebcc95'
+    }
+  }
+)
